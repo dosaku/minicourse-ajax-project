@@ -37,6 +37,36 @@ function buildArticle(article) {
     return $li.append($a).append($p);
 }
 
+function loadWikipediaLinks(city) {
+
+    var url = 'https://en.wikipedia.org/w/api.php';
+    var pageList = $('#wikipedia-links');
+
+    $.ajax({
+        url: url,
+        data: {action: 'query',
+               prop: 'info',
+               generator: 'prefixsearch',
+               gpssearch: city,
+               inprop: 'url|displaytitle',
+               format: 'json'},
+        dataType: 'jsonp',
+        success: function(data) {
+            $.each(data.query.pages, function(index, page) {
+                pageList.append(buildLink(page));
+            });
+        }
+    });
+}
+
+function buildLink(page) {
+
+    var $li = $('<li>');
+    var $a = $('<a>', {href: page.canonicalurl, html: page.displaytitle});
+
+    return $li.append($a);
+}
+
 function loadData() {
 
     var $body = $('body');
@@ -58,6 +88,7 @@ function loadData() {
     $nytHeaderElem.text('New York Times Articles for ' + city);
     loadStreetView(address);
     loadNYTArticles(city);
+    loadWikipediaLinks(city);
 
     return false;
 };
