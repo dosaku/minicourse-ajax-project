@@ -44,18 +44,17 @@ function loadWikipediaLinks(city) {
 
     $.ajax({
         url: url,
+        dataType: 'jsonp',
         data: {action: 'query',
                prop: 'info',
                generator: 'prefixsearch',
                gpssearch: city,
                inprop: 'url|displaytitle',
-               format: 'json'},
-        dataType: 'jsonp',
-        success: function(data) {
-            $.each(data.query.pages, function(index, page) {
+               format: 'json'}
+    }).done(function(data) {
+        $.each(data.query.pages, function(index, page) {
                 pageList.append(buildLink(page));
-            });
-        }
+        });
     });
 }
 
