@@ -14,10 +14,10 @@ function loadNYTArticles(city) {
     var apiKey = 'd6102fe0fcc8476dadd38d660ab1d619';
     var data = {'api-key': apiKey,
                 'q': city,
-                'fl': 'abstract,lead_paragraph,web_url'};
+                'fl': 'headline,snippet,web_url'};
     var articleList = $('.article-list');
 
-    $.getJSON(url, data, function(data, textStatus, jqXHR) {
+    $.getJSON(url, data, function(data) {
         $.each(data.response.docs, function(index, article) {
            articleList.append(buildArticle(article));
         });
@@ -26,15 +26,13 @@ function loadNYTArticles(city) {
 
 function buildArticle(article) {
 
-    var abstract = article.abstract || "No Abstract";
-    var paragraph = article.lead_paragraph || "No Lead Paragraph"
+    var headline = article.headline.main;
+    var snippet = article.snippet;
     var $li = $('<li>', {class: 'article'});
-    var $a = $('<a>', {href: article.web_url, html: abstract});
-    var $p = $('<p>', {html: paragraph});
+    var $a = $('<a>', {href: article.web_url, html: headline});
+    var $p = $('<p>', {html: snippet});
 
-    $li.append($a);
-    $li.append($p);
-    return $li;
+    return $li.append($a).append($p);
 }
 
 function loadData() {
@@ -53,12 +51,11 @@ function loadData() {
     $wikiElem.text("");
     $nytElem.text("");
 
+    // update information based on input
     $greeting.text('So, you want to live at ' + address + '?');
     $nytHeaderElem.text('New York Times Articles for ' + city);
     loadStreetView(address);
     loadNYTArticles(city);
-
-    // YOUR CODE GOES HERE!
 
     return false;
 };
