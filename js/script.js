@@ -21,6 +21,8 @@ function loadNYTArticles(city) {
         $.each(data.response.docs, function(index, article) {
            articleList.append(buildArticle(article));
         });
+    }).fail(function() {
+        $('#nytimes-header').text('New York Times Articles Could Not Be Loaded');
     });
 }
 
